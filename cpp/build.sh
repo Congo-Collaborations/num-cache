@@ -1,0 +1,1 @@
+g++ -std=gnu++0x -U__STRICT_ANSI__ numb/sha256.cpp numb/numb.cpp test.cpp -o test
