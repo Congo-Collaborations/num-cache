@@ -12,7 +12,7 @@ class Numb {
     static string strategy;
     static int precision;
     Numb(double);
-    Numb(double, string);
+    Numb(double, string, string);
     static void setup(string, string, int, string);
     static void cache(string, string);
     static string query(string);

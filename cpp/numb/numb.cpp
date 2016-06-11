@@ -55,14 +55,14 @@ Numb::Numb(double _value)
     }
 }
 
-Numb::Numb(double _value, string _signature)
+Numb::Numb(double _value, string _signature, string content)
 {
     value = _value;
     signature = _signature;
     stringstream ss (stringstream::in | stringstream::out);
-    ss.setf( std::ios::fixed, std:: ios::floatfield );
-    ss.precision(Numb::precision);
-    ss << "asign|" << value;
+    // ss.setf( std::ios::fixed, std:: ios::floatfield );
+    // ss.precision(Numb::precision);
+    ss << content;
     Numb::cache(signature, ss.str());
 }
 
@@ -78,7 +78,7 @@ void Numb::setup(string cache_out, string cache_in, int precision, string strate
 
 void Numb::cache(string signature, string content)
 {
-    
+
     const int dir_err = system(string("mkdir -p "+Numb::cache_out).c_str());
     if (-1 == dir_err)
     {
@@ -168,26 +168,26 @@ Numb Numb::doublon(string oper, Numb numb1, Numb numb2, double result)
             vector<string> v;
             split(queried, '|', v);
             cout << "INFO -- loading [" << stod(v[1]) << "] from cache entry [" << signature << "]." << endl;
-            return Numb(stod(v[1]), signature);
+            return Numb(stod(v[1]), signature, _ss.str());
         }else{
             if (Numb::check(queried, result)){
-                return Numb(result, signature);
+                return Numb(result, signature, _ss.str());
             }else{
                 if(Numb::strategy.compare("ignore-cache") == 0){
-                    return Numb(result, signature);
+                    return Numb(result, signature, _ss.str());
                 }else if(Numb::strategy.compare("use-cache") == 0){
                     vector<string> v;
                     split(queried, '|', v);
                     cout << "INFO -- using [" << stod(v[1]) << "] from cache entry [" << signature << "]." << endl;
-                    return Numb(stod(v[1]), signature);
+                    return Numb(stod(v[1]), signature, _ss.str());
                 }else{
                     cout << "ERROR -- unknown cache strategy provided. Only accepts ['ignore-cache', 'use-cache']." << endl;
-                    Numb(result, signature);
+                    Numb(result, signature, _ss.str());
                 }
             }
         }
     }else{
-        return Numb(result, signature);
+        return Numb(result, signature, _ss.str());
     }
 }
 
@@ -216,9 +216,9 @@ Numb operator/ (const Numb &lhs, const Numb &rhs)
 }
 
 ostream &operator<< ( ostream &output, const Numb &N )
-{ 
+{
     output << N.value;
-    return output;            
+    return output;
 }
 
 Numb Numb::singleton(string oper, Numb numb, double result)
@@ -241,26 +241,26 @@ Numb Numb::singleton(string oper, Numb numb, double result)
             vector<string> v;
             split(queried, '|', v);
             cout << "INFO -- loading [" << stod(v[1]) << "] from cache entry [" << signature << "]." << endl;
-            return Numb(stod(v[1]), signature);
+            return Numb(stod(v[1]), signature, _ss.str());
         }else{
             if (Numb::check(queried, result)){
-                return Numb(result, signature);
+                return Numb(result, signature, _ss.str());
             }else{
                 if(Numb::strategy.compare("ignore-cache") == 0){
-                    return Numb(result, signature);
+                    return Numb(result, signature, _ss.str());
                 }else if(Numb::strategy.compare("use-cache") == 0){
                     vector<string> v;
                     split(queried, '|', v);
                     cout << "INFO -- using [" << stod(v[1]) << "] from cache entry [" << signature << "]." << endl;
-                    return Numb(stod(v[1]), signature);
+                    return Numb(stod(v[1]), signature, _ss.str());
                 }else{
                     cout << "ERROR -- unknown cache strategy provided. Only accepts ['ignore-cache', 'use-cache']." << endl;
-                    return Numb(result, signature);
+                    return Numb(result, signature, _ss.str());
                 }
             }
         }
     }else{
-        return Numb(result, signature);
+        return Numb(result, signature, _ss.str());
     }
 }
 

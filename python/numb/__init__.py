@@ -70,9 +70,9 @@ class Numb:
         if isinstance(value, list):
             self.signature = value[0]
             self.value = value[1]
-            content = 'asign|{0}'.format(format(self.value, '.{0}f'.format(Numb.precision)))
+            content = value[2]
             Numb.cache(self.signature, content)
-            print "hash = asign{0}".format(format(self.value, '.{0}f'.format(Numb.precision)))
+            print "hash = {0}".format(content)
             print "signature = {0}".format(self.signature)
         else:
             self.signature = hashlib.sha256("asign{0}".format(format(value, '.{0}f'.format(Numb.precision)))).hexdigest()
@@ -101,21 +101,21 @@ class Numb:
         if queried:
             if Numb.strategy == 'load-cache':
                 logger.info("loading [{0}] from cache entry [{1}].".format(queried.split('|')[1], signature))
-                return [signature, float(queried.split('|')[1])]
+                return [signature, float(queried.split('|')[1]), content]
             else:
                 if Numb.check(queried, result):
-                    return [signature, result]
+                    return [signature, result, content]
                 else:
                     if Numb.strategy == 'ignore-cache':
-                        return [signature, result]
+                        return [signature, result, content]
                     elif Numb.strategy == 'use-cache':
                         logger.info("using [{0}] from cache entry [{1}].".format(queried.split('|')[1], signature))
-                        return [signature, float(queried.split('|')[1])]
+                        return [signature, float(queried.split('|')[1]), content]
                     else:
                         logger.error("unknown cache strategy provided. Only accepts ['ignore-cache', 'use-cache'].")
-                        return [signature, result]
+                        return [signature, result, content]
         else:
-            return [signature, result]
+            return [signature, result, content]
 
     def __radd__(self, numb):
         return Numb(Numb.doublon('radd', self, numb, self.value + numb))
@@ -173,21 +173,21 @@ class Numb:
         if queried:
             if Numb.strategy == 'load-cache':
                 logger.info("loading [{0}] from cache entry [{1}].".format(queried.split('|')[1], signature))
-                return [signature, float(queried.split('|')[1])]
+                return [signature, float(queried.split('|')[1]), content]
             else:
                 if Numb.check(queried, result):
-                    return [signature, result]
+                    return [signature, result, content]
                 else:
                     if Numb.strategy == 'ignore-cache':
-                        return [signature, result]
+                        return [signature, result, content]
                     elif Numb.strategy == 'use-cache':
                         logger.info("using [{0}] from cache entry [{1}].".format(queried.split('|')[1], signature))
-                        return [signature, float(queried.split('|')[1])]
+                        return [signature, float(queried.split('|')[1]), content]
                     else:
                         logger.error("unknown cache strategy provided. Only accepts ['ignore-cache', 'use-cache'].")
-                        return [signature, result]
+                        return [signature, result, content]
         else:
-            return [signature, result]
+            return [signature, result, content]
 
 def exp(numb):
     return Numb(Numb.singleton('exp', numb, math.exp(numb.value)))
